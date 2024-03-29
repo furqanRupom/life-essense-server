@@ -4,7 +4,7 @@ import { User } from "@prisma/client";
 
 /* create user  */
 
-const createUserIntoDB = (user:User) => {
+const createUserIntoDB = async(user:User) => {
   
 }
 
