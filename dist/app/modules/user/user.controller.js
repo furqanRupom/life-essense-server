@@ -22,10 +22,20 @@ const createUser = (0, catchAync_1.default)((req, res) => __awaiter(void 0, void
     (0, sendResponse_1.default)(res, {
         success: true,
         statusCode: http_status_1.default.OK,
-        message: "User created successfully",
+        message: "User registered successfully",
+        data: result
+    });
+}));
+const userLogin = (0, catchAync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield user_service_1.userServices.login(req.body);
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: http_status_1.default.OK,
+        message: "User logged in successfully",
         data: result
     });
 }));
 exports.userController = {
-    createUser
+    createUser,
+    userLogin
 };

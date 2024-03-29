@@ -26,6 +26,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.userServices = void 0;
 const prisma_1 = __importDefault(require("../../shared/prisma"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
+const jwtHelpers_1 = require("../../helpers/jwtHelpers");
+const config_1 = require("../../config");
 /* create user  */
 const createUserIntoDB = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield prisma_1.default.$transaction((tx) => __awaiter(void 0, void 0, void 0, function* () {
@@ -60,6 +62,27 @@ const createUserIntoDB = (payload) => __awaiter(void 0, void 0, void 0, function
     }));
     return result;
 });
+/* users logged in  */
+const login = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+    const userData = yield prisma_1.default.user.findUniqueOrThrow({
+        where: {
+            email: payload.email
+        }
+    });
+    const isMatch = yield bcrypt_1.default.compare(payload.password, userData.password);
+    if (!isMatch) {
+        throw new Error("Password is incorrect");
+    }
+    const { name, email } = userData;
+    const accessToken = jwtHelpers_1.jwtHelpers.generateToken({ name, email }, config_1.config.secret_access_token, config_1.config.access_token_expires_in);
+    return {
+        id: userData.id,
+        name: userData.name,
+        email: userData.email,
+        accessToken: accessToken
+    };
+});
 exports.userServices = {
-    createUserIntoDB
+    createUserIntoDB,
+    login
 };

@@ -10,6 +10,7 @@ const moduleRoutes = [
         path: "/",
         route: userRoutes
     },
+    
    
 ]
 

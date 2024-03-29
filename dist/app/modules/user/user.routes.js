@@ -10,4 +10,5 @@ const validateRequest_1 = __importDefault(require("../../middleware/validateRequ
 const user_validation_1 = require("./user.validation");
 const router = express_1.default.Router();
 router.post('/register', (0, validateRequest_1.default)(user_validation_1.userValidation.userSchemaValidation), user_controller_1.userController.createUser);
+router.post('/login', user_controller_1.userController.userLogin);
 exports.userRoutes = router;

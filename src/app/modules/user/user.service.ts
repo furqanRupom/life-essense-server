@@ -4,6 +4,8 @@ import { User } from "@prisma/client";
 import prisma from "../../shared/prisma";
 import bcrypt from "bcrypt"
 import { UserData } from "./user.interface";
+import { jwtHelpers } from "../../helpers/jwtHelpers";
+import { config } from "../../config";
 
 /* create user  */
 
@@ -48,7 +50,34 @@ const createUserIntoDB = async (payload: UserData) => {
 }
 
 
+/* users logged in  */
+
+const login = async (payload: { email: string, password: string }) => {
+  const userData = await prisma.user.findUniqueOrThrow({
+    where: {
+      email: payload.email
+    }
+  })
+  const isMatch = await bcrypt.compare(payload.password, userData.password);
+
+  if (!isMatch) {
+    throw new Error("Password is incorrect");
+  }
+
+  const { name, email } = userData
+  const accessToken = jwtHelpers.generateToken({ name, email }, config.secret_access_token as string, config.access_token_expires_in as string);
+
+  return {
+    id: userData.id,
+    name: userData.name,
+    email: userData.email,
+    accessToken: accessToken
+  }
+}
+
+
 
 export const userServices = {
-  createUserIntoDB
+  createUserIntoDB,
+  login
 }
