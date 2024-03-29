@@ -16,7 +16,7 @@ datasource db {
 // User model
 
 model User {
-  id                String       @id @default(cuid())
+  id                String       @id @default(uuid())
   name              String
   email             String       @unique
   password          String
@@ -33,7 +33,7 @@ model User {
 }
 
 model UserProfile {
-  id               String   @id @default(cuid())
+  id               String   @id @default(uuid())
   userId           String   @unique
   bio              String
   age              Int
@@ -48,7 +48,7 @@ model UserProfile {
 // Request model
 
 model Request {
-  id              String   @id @default(cuid())
+  id              String   @id @default(uuid())
   donorId         String
   requesterId     String
   phoneNumber     String
