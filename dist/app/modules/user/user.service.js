@@ -90,7 +90,7 @@ const getMyProfile = (token) => __awaiter(void 0, void 0, void 0, function* () {
     }
     const validtoken = jwtHelpers_1.jwtHelpers.verifyToken(token, config_1.config.secret_access_token);
     if (!validtoken) {
-        throw new AppError_1.default(http_status_1.default.UNAUTHORIZED, ' unauthorized error');
+        throw new AppError_1.default(http_status_1.default.UNAUTHORIZED, 'unauthorized error');
     }
     const user = yield prisma_1.default.user.findUniqueOrThrow({
         where: {

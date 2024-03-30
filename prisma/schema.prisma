@@ -20,7 +20,7 @@ model User {
   name         String
   email        String       @unique
   password     String
-  bloodType    String
+  bloodType    BloodGroup
   location     String
   availability Boolean      @default(false)
   createdAt    DateTime     @default(now())

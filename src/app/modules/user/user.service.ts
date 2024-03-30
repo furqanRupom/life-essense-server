@@ -83,7 +83,7 @@ const getMyProfile = async (token: string) => {
   }
   const validtoken = jwtHelpers.verifyToken(token, config.secret_access_token as string);
   if (!validtoken) {
-    throw new AppError(httpStatus.UNAUTHORIZED, ' unauthorized error');
+    throw new AppError(httpStatus.UNAUTHORIZED, 'unauthorized error');
   }
   const user = await prisma.user.findUniqueOrThrow({
     where: {

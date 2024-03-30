@@ -1,10 +1,16 @@
+-- CreateEnum
+CREATE TYPE "RequestStatus" AS ENUM ('PENDING', 'APPROVED', 'REJECTED');
+
+-- CreateEnum
+CREATE TYPE "BloodGroup" AS ENUM ('A_POSITIVE', 'A_NEGATIVE', 'B_POSITIVE', 'B_NEGATIVE', 'AB_POSITIVE', 'AB_NEGATIVE', 'O_POSITIVE', 'O_NEGATIVE');
+
 -- CreateTable
 CREATE TABLE "users" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
-    "bloodType" TEXT NOT NULL,
+    "bloodType" "BloodGroup" NOT NULL,
     "location" TEXT NOT NULL,
     "availability" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -36,7 +42,7 @@ CREATE TABLE "requestes" (
     "hospitalName" TEXT NOT NULL,
     "hospitalAddress" TEXT NOT NULL,
     "reason" TEXT NOT NULL,
-    "requestStatus" TEXT NOT NULL DEFAULT 'PENDING',
+    "requestStatus" "RequestStatus" NOT NULL DEFAULT 'PENDING',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 

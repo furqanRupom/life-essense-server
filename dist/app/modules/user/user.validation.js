@@ -9,6 +9,8 @@ const userSchemaValidation = zod_1.z.object({
         }),
         email: zod_1.z.string({
             required_error: "email is required"
+        }).email({
+            message: "Please enter a valid email address"
         }),
         password: zod_1.z.string({
             required_error: "password is required"
