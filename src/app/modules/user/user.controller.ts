@@ -27,12 +27,35 @@ const userLogin = catchAsync(async (req: Request, res: Response) => {
 })
 
 
+const getMyProfile = catchAsync(async (req: Request, res: Response) => {
+    const token = req.headers.authorization;
+    const result = await userServices.getMyProfile(token as string);
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.OK,
+        message: "Profile retrieved successfully",
+        data: result
+    })
+});
 
+
+const updateMyProfile = catchAsync(async (req: Request, res: Response) => {
+    const token = req.headers.authorization;
+    const result = await userServices.updateProfile(token as string,req.body);
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.OK,
+        message: "User profile updated successfully",
+        data: result
+    })
+})
 
 
 
 export const userController = {
     createUser,
     userLogin,
+    getMyProfile,
+    updateMyProfile
   
 }

@@ -225,36 +225,9 @@ const updateRequestStatus = (payload, token, requestId) => __awaiter(void 0, voi
     });
     return updateStatus;
 });
-const getMyProfile = (token) => __awaiter(void 0, void 0, void 0, function* () {
-    if (!token) {
-        throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'token is not found');
-    }
-    const validtoken = jwtHelpers_1.jwtHelpers.verifyToken(token, config_1.config.secret_access_token);
-    if (!validtoken) {
-        throw new AppError_1.default(http_status_1.default.UNAUTHORIZED, ' unauthorized error');
-    }
-    const user = yield prisma_1.default.user.findUniqueOrThrow({
-        where: {
-            email: validtoken.email
-        },
-        select: {
-            id: true,
-            name: true,
-            email: true,
-            location: true,
-            bloodType: true,
-            availability: true,
-            createdAt: true,
-            updatedAt: true,
-            profile: true
-        }
-    });
-    return user;
-});
 exports.requestServices = {
     retrieveAllDonors,
     requestBloodDonation,
     getBloodDonations,
     updateRequestStatus,
-    getMyProfile
 };

@@ -242,39 +242,10 @@ const updateRequestStatus = async (payload: RequestStatus, token: string, reques
 }
 
 
-const getMyProfile = async (token: string) => {
-    if (!token) {
-        throw new AppError(httpStatus.NOT_FOUND, 'token is not found');
-    }
-    const validtoken = jwtHelpers.verifyToken(token, config.secret_access_token as string);
-    if (!validtoken) {
-        throw new AppError(httpStatus.UNAUTHORIZED, ' unauthorized error');
-    }
-    const user = await prisma.user.findUniqueOrThrow({
-        where: {
-            email: validtoken.email
-        },
-        select:{
-            id: true,
-            name: true,
-            email: true,
-            location: true,
-            bloodType: true,
-            availability: true,
-            createdAt: true,
-            updatedAt: true,
-            profile:true
-        }
-    })
 
-    return user;
-
-
-}
 export const requestServices = {
     retrieveAllDonors,
     requestBloodDonation,
     getBloodDonations,
     updateRequestStatus,
-    getMyProfile
 }

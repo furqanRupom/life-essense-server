@@ -35,7 +35,29 @@ const userLogin = (0, catchAync_1.default)((req, res) => __awaiter(void 0, void 
         data: result
     });
 }));
+const getMyProfile = (0, catchAync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const token = req.headers.authorization;
+    const result = yield user_service_1.userServices.getMyProfile(token);
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: http_status_1.default.OK,
+        message: "Profile retrieved successfully",
+        data: result
+    });
+}));
+const updateMyProfile = (0, catchAync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const token = req.headers.authorization;
+    const result = yield user_service_1.userServices.updateProfile(token, req.body);
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: http_status_1.default.OK,
+        message: "User profile updated successfully",
+        data: result
+    });
+}));
 exports.userController = {
     createUser,
     userLogin,
+    getMyProfile,
+    updateMyProfile
 };

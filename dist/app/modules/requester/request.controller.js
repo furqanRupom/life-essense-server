@@ -62,20 +62,9 @@ const updateRequestStatus = (0, catchAync_1.default)((req, res) => __awaiter(voi
         data: result
     });
 }));
-const getMyProfile = (0, catchAync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const token = req.headers.authorization;
-    const result = yield request_service_1.requestServices.getMyProfile(token);
-    (0, sendResponse_1.default)(res, {
-        success: true,
-        statusCode: http_status_1.default.OK,
-        message: "Profile retrieved successfully",
-        data: result
-    });
-}));
 exports.requestController = {
     retrieveDonors,
     requestBloodDonation,
     getBloodDonation,
     updateRequestStatus,
-    getMyProfile
 };

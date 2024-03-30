@@ -4,6 +4,7 @@ import validateRequest from '../../middleware/validateRequest';
 import { userValidation } from './user.validation';
 import { requestController } from '../requester/request.controller';
 import { requestValidation } from '../requester/request.validation';
+import { userServices } from './user.service';
 
 
 const router = express.Router();
@@ -23,7 +24,8 @@ router.get('/donation-request', requestController.getBloodDonation);
 
 router.put('/donation-request/:requestId', requestController.updateRequestStatus);
 
-router.get('/my-profile',requestController.getMyProfile);
+router.get('/my-profile',userController.getMyProfile);
+router.put('/my-profile', userController.updateMyProfile);
 
 
 export const userRoutes = router;

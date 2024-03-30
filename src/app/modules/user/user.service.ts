@@ -1,11 +1,13 @@
 
 
-import { RequestStatus, User } from "@prisma/client";
+import { RequestStatus, User, UserProfile } from "@prisma/client";
 import prisma from "../../shared/prisma";
 import bcrypt from "bcrypt"
 import { UserData } from "./user.interface";
 import { jwtHelpers } from "../../helpers/jwtHelpers";
 import { config } from "../../config";
+import httpStatus from "http-status";
+import AppError from "../../errors/AppError";
 
 /* create user  */
 
@@ -75,11 +77,74 @@ const login = async (payload: { email: string, password: string }) => {
   }
 }
 
+const getMyProfile = async (token: string) => {
+  if (!token) {
+    throw new AppError(httpStatus.NOT_FOUND, 'token is not found');
+  }
+  const validtoken = jwtHelpers.verifyToken(token, config.secret_access_token as string);
+  if (!validtoken) {
+    throw new AppError(httpStatus.UNAUTHORIZED, ' unauthorized error');
+  }
+  const user = await prisma.user.findUniqueOrThrow({
+    where: {
+      email: validtoken.email
+    },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      location: true,
+      bloodType: true,
+      availability: true,
+      createdAt: true,
+      updatedAt: true,
+      profile: true
+    }
+  })
+
+  return user;
 
 
+}
+
+const updateProfile = async (token: string, payload: Partial<UserProfile>) => {
+
+  console.log(payload);
+  if (!token) {
+    throw new AppError(httpStatus.NOT_FOUND, 'token is not found');
+  }
+  const validtoken = jwtHelpers.verifyToken(token, config.secret_access_token as string);
+  if (!validtoken) {
+    throw new AppError(httpStatus.UNAUTHORIZED, ' unauthorized error');
+  }
+
+  const getMyProfile = await prisma.user.findUniqueOrThrow({
+    where: {
+      email: validtoken.email
+    },
+    include:{
+      profile:true
+    }
+  })
+
+  if (!getMyProfile) {
+    throw new AppError(httpStatus.NOT_FOUND, 'user profile not found');
+  }
+
+  const updateProfile = await prisma.userProfile.update({
+    where: {
+      id: getMyProfile.profile?.id
+    },
+    data: payload
+  })
+
+  return updateProfile;
+}
 
 
 export const userServices = {
   createUserIntoDB,
   login,
+  getMyProfile,
+  updateProfile
 }
