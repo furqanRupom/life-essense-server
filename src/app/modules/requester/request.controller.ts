@@ -5,13 +5,13 @@ import { Request, Response } from "express";
 import { requestServices } from "./request.service";
 import { userFilterableFields } from "./request.constant";
 import pick from "../../shared/pick";
-import AppError from "../../errors/AppError";
 
 
 const retrieveDonors = catchAsync(async (req: Request, res: Response) => {
+     
     const filters = pick(req.query, userFilterableFields);
     const options = pick(req.query, ['limit', 'page', 'sortOrder', 'sortBy'])
-
+       console.log(filters)
 
     const result = await requestServices.retrieveAllDonors(filters, options);
     sendResponse(res, {

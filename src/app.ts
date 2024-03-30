@@ -3,17 +3,14 @@ import cors from "cors"
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv"
 import router from "./app/routes";
-import { globalAgent } from "https";
 import globalErrorHandler from "./app/middleware/globalErrorHandler";
 
 dotenv.config();
 
 const app: Application = express();
-
-
+app.use(express.urlencoded({ extended: true }));
 app.use(cors())
 app.use(express.json())
-app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 

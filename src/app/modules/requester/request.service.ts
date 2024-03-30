@@ -1,44 +1,49 @@
 import { Prisma, RequestStatus } from "@prisma/client";
-import { IPaginationOptions } from "../../interface/interface";
 import prisma from "../../shared/prisma";
-import { paginationHelpers } from "../../helpers/paginationHelpers";
-import { userSearchableFields } from "./request.constant";
+import { userSearchAbleFields } from "./request.constant";
 import { Request, Response } from "express";
 import { IDonation } from "./request.interface";
 import AppError from "../../errors/AppError";
 import httpStatus from "http-status";
 import { jwtHelpers } from "../../helpers/jwtHelpers";
 import { config } from "../../config";
+import { IPaginationOptions } from "../../interface/interface";
+import { paginationHelper } from "../../helpers/paginationHelpers";
 
 
 const retrieveAllDonors = async (params: any, options: IPaginationOptions) => {
-    const { page, limit, skip } = paginationHelpers(options);
-    console.log(options)
+    const { page, limit, skip } = paginationHelper.calculatePagination(options);
+  
 
     const { searchTerm, ...filterData } = params;
-    console.log(params);
+    console.log({filterData})
     const andCondions: Prisma.UserWhereInput[] = [];
 
     if (params.searchTerm) {
+       
         andCondions.push({
-            OR: userSearchableFields.map(field => ({
+            OR: userSearchAbleFields?.map(field => ({
                 [field]: {
-                    contains: searchTerm,
-                    mode: 'insensitive'
+                    contains: params?.searchTerm,
+                    mode: 'insensitive',
+
                 }
             }))
         })
     };
 
     if (Object.keys(filterData).length > 0) {
+        console.log('filter : working')
         andCondions.push({
-            AND: Object.keys(filterData).map(key => ({
+            AND: Object.keys(filterData)?.map(key => ({
                 [key]: {
                     equals: (filterData as any)[key]
                 }
             }))
         })
     };
+
+    
 
     const whereConditons: Prisma.UserWhereInput = andCondions.length > 0 ? { AND: andCondions } : {};
 
@@ -47,7 +52,9 @@ const retrieveAllDonors = async (params: any, options: IPaginationOptions) => {
         skip,
         take: limit,
         orderBy: options.sortBy && options.sortOrder ? {
-            [options.sortBy]: options.sortOrder
+            profile: {
+                [options.sortBy]: options.sortOrder
+            }
         } : {
             createdAt: 'desc'
         },
@@ -59,10 +66,20 @@ const retrieveAllDonors = async (params: any, options: IPaginationOptions) => {
             availability: true,
             createdAt: true,
             updatedAt: true,
-            profile: true,
-            doner: true,
+            profile: {
+                select: {
+                    id: true,
+                    userId: true,
+                    bio: true,
+                    age: true,
+                    lastDonationDate: true,
+                    createdAt: true,
+                    updatedAt: true
+                }
+            }
         }
     });
+
 
     const total = await prisma.user.count({
         where: whereConditons
@@ -212,7 +229,7 @@ const updateRequestStatus = async (payload: RequestStatus, token: string, reques
     if (!validtoken) {
         throw new AppError(httpStatus.UNAUTHORIZED, ' unauthorized error');
     }
-    const { status }: any = payload;
+    const {requestStatus}: any = payload;
     await prisma.user.findUniqueOrThrow({
         where: {
             email: validtoken.email
@@ -234,7 +251,7 @@ const updateRequestStatus = async (payload: RequestStatus, token: string, reques
             id: findRequests.id,
         },
         data: {
-            requestStatus: status
+            requestStatus
         }
     })
 
