@@ -51,8 +51,20 @@ const getBloodDonation = (0, catchAync_1.default)((req, res) => __awaiter(void 0
         data: result
     });
 }));
+const updateRequestStatus = (0, catchAync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const token = req.headers.authorization;
+    const requestId = req.params.requestId;
+    const result = yield request_service_1.requestServices.updateRequestStatus(req.body, token, requestId);
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: http_status_1.default.OK,
+        message: "Donation request status successfully updated",
+        data: result
+    });
+}));
 exports.requestController = {
     retrieveDonors,
     requestBloodDonation,
-    getBloodDonation
+    getBloodDonation,
+    updateRequestStatus
 };

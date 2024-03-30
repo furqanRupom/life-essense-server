@@ -193,8 +193,41 @@ const getBloodDonations = (token) => __awaiter(void 0, void 0, void 0, function*
     }
     return requestes;
 });
+const updateRequestStatus = (payload, token, requestId) => __awaiter(void 0, void 0, void 0, function* () {
+    if (!token) {
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'token is not found');
+    }
+    const validtoken = jwtHelpers_1.jwtHelpers.verifyToken(token, config_1.config.secret_access_token);
+    if (!validtoken) {
+        throw new AppError_1.default(http_status_1.default.UNAUTHORIZED, 'Invalid token');
+    }
+    const { status } = payload;
+    yield prisma_1.default.user.findUniqueOrThrow({
+        where: {
+            email: validtoken.email
+        }
+    });
+    const findRequests = yield prisma_1.default.request.findFirst({
+        where: {
+            requesterId: requestId
+        }
+    });
+    if (!findRequests) {
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'This donners have no rquestes for blood donation');
+    }
+    const updateStatus = yield prisma_1.default.request.update({
+        where: {
+            id: findRequests.id,
+        },
+        data: {
+            requestStatus: status
+        }
+    });
+    return updateStatus;
+});
 exports.requestServices = {
     retrieveAllDonors,
     requestBloodDonation,
-    getBloodDonations
+    getBloodDonations,
+    updateRequestStatus
 };

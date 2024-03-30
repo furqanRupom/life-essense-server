@@ -51,8 +51,22 @@ const getBloodDonation = catchAsync(async (req: Request, res: Response) => {
     })
 })
 
+
+const updateRequestStatus = catchAsync(async (req: Request, res: Response) => {
+    const token  = req.headers.authorization;
+    const requestId = req.params.requestId;
+    const result = await requestServices.updateRequestStatus(req.body,token as string, requestId);
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.OK,
+        message: "Donation request status successfully updated",
+        data: result
+    })
+})
+
 export const requestController = {
     retrieveDonors,
     requestBloodDonation,
-    getBloodDonation
+    getBloodDonation,
+    updateRequestStatus
 }

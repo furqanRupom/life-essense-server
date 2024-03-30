@@ -84,5 +84,5 @@ const login = (payload) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.userServices = {
     createUserIntoDB,
-    login
+    login,
 };

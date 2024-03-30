@@ -37,5 +37,5 @@ const userLogin = (0, catchAync_1.default)((req, res) => __awaiter(void 0, void 
 }));
 exports.userController = {
     createUser,
-    userLogin
+    userLogin,
 };

@@ -17,4 +17,5 @@ router.post('/login', user_controller_1.userController.userLogin);
 router.get('/donor-list', request_controller_1.requestController.retrieveDonors);
 router.post('/donation-request', (0, validateRequest_1.default)(request_validation_1.requestValidation.requestSchemaValidation), request_controller_1.requestController.requestBloodDonation);
 router.get('/donation-request', request_controller_1.requestController.getBloodDonation);
+router.put('/donation-request/:requestId', request_controller_1.requestController.updateRequestStatus);
 exports.userRoutes = router;

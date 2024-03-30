@@ -28,7 +28,11 @@ const userLogin = catchAsync(async (req: Request, res: Response) => {
 
 
 
+
+
+
 export const userController = {
     createUser,
-    userLogin
+    userLogin,
+  
 }

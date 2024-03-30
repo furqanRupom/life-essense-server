@@ -1,6 +1,6 @@
 
 
-import { User } from "@prisma/client";
+import { RequestStatus, User } from "@prisma/client";
 import prisma from "../../shared/prisma";
 import bcrypt from "bcrypt"
 import { UserData } from "./user.interface";
@@ -77,7 +77,9 @@ const login = async (payload: { email: string, password: string }) => {
 
 
 
+
+
 export const userServices = {
   createUserIntoDB,
-  login
+  login,
 }

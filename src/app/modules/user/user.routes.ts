@@ -18,7 +18,10 @@ router.post('/login', userController.userLogin);
 router.get('/donor-list',requestController.retrieveDonors);
 
 router.post('/donation-request',validateRequest(requestValidation.requestSchemaValidation), requestController.requestBloodDonation);
+
 router.get('/donation-request', requestController.getBloodDonation);
+
+router.put('/donation-request/:requestId', requestController.updateRequestStatus);
 
 
 export const userRoutes = router;
