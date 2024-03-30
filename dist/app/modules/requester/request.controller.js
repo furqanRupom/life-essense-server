@@ -22,6 +22,7 @@ const pick_1 = __importDefault(require("../../shared/pick"));
 const retrieveDonors = (0, catchAync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const filters = (0, pick_1.default)(req.query, request_constant_1.userFilterableFields);
     const options = (0, pick_1.default)(req.query, ['limit', 'page', 'sortOrder', 'sortBy']);
+    console.log(filters);
     const result = yield request_service_1.requestServices.retrieveAllDonors(filters, options);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,

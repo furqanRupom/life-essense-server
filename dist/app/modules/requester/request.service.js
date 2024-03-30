@@ -25,32 +25,33 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.requestServices = void 0;
 const prisma_1 = __importDefault(require("../../shared/prisma"));
-const paginationHelpers_1 = require("../../helpers/paginationHelpers");
 const request_constant_1 = require("./request.constant");
 const AppError_1 = __importDefault(require("../../errors/AppError"));
 const http_status_1 = __importDefault(require("http-status"));
 const jwtHelpers_1 = require("../../helpers/jwtHelpers");
 const config_1 = require("../../config");
+const paginationHelpers_1 = require("../../helpers/paginationHelpers");
 const retrieveAllDonors = (params, options) => __awaiter(void 0, void 0, void 0, function* () {
-    const { page, limit, skip } = (0, paginationHelpers_1.paginationHelpers)(options);
-    console.log(options);
+    var _a;
+    const { page, limit, skip } = paginationHelpers_1.paginationHelper.calculatePagination(options);
     const { searchTerm } = params, filterData = __rest(params, ["searchTerm"]);
-    console.log(params);
+    console.log({ filterData });
     const andCondions = [];
     if (params.searchTerm) {
         andCondions.push({
-            OR: request_constant_1.userSearchableFields.map(field => ({
+            OR: request_constant_1.userSearchAbleFields === null || request_constant_1.userSearchAbleFields === void 0 ? void 0 : request_constant_1.userSearchAbleFields.map(field => ({
                 [field]: {
-                    contains: searchTerm,
-                    mode: 'insensitive'
+                    contains: params === null || params === void 0 ? void 0 : params.searchTerm,
+                    mode: 'insensitive',
                 }
             }))
         });
     }
     ;
     if (Object.keys(filterData).length > 0) {
+        console.log('filter : working');
         andCondions.push({
-            AND: Object.keys(filterData).map(key => ({
+            AND: (_a = Object.keys(filterData)) === null || _a === void 0 ? void 0 : _a.map(key => ({
                 [key]: {
                     equals: filterData[key]
                 }
@@ -64,7 +65,9 @@ const retrieveAllDonors = (params, options) => __awaiter(void 0, void 0, void 0,
         skip,
         take: limit,
         orderBy: options.sortBy && options.sortOrder ? {
-            [options.sortBy]: options.sortOrder
+            profile: {
+                [options.sortBy]: options.sortOrder
+            }
         } : {
             createdAt: 'desc'
         },
@@ -76,8 +79,17 @@ const retrieveAllDonors = (params, options) => __awaiter(void 0, void 0, void 0,
             availability: true,
             createdAt: true,
             updatedAt: true,
-            profile: true,
-            doner: true,
+            profile: {
+                select: {
+                    id: true,
+                    userId: true,
+                    bio: true,
+                    age: true,
+                    lastDonationDate: true,
+                    createdAt: true,
+                    updatedAt: true
+                }
+            }
         }
     });
     const total = yield prisma_1.default.user.count({
@@ -201,7 +213,7 @@ const updateRequestStatus = (payload, token, requestId) => __awaiter(void 0, voi
     if (!validtoken) {
         throw new AppError_1.default(http_status_1.default.UNAUTHORIZED, ' unauthorized error');
     }
-    const { status } = payload;
+    const { requestStatus } = payload;
     yield prisma_1.default.user.findUniqueOrThrow({
         where: {
             email: validtoken.email
@@ -220,7 +232,7 @@ const updateRequestStatus = (payload, token, requestId) => __awaiter(void 0, voi
             id: findRequests.id,
         },
         data: {
-            requestStatus: status
+            requestStatus
         }
     });
     return updateStatus;
