@@ -64,9 +64,22 @@ const updateRequestStatus = catchAsync(async (req: Request, res: Response) => {
     })
 })
 
+
+const getMyProfile = catchAsync(async (req: Request, res: Response) => {
+    const token = req.headers.authorization;
+    const result = await requestServices.getMyProfile(token as string);
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.OK,
+        message: "Profile retrieved successfully",
+        data: result
+    })
+})
+
 export const requestController = {
     retrieveDonors,
     requestBloodDonation,
     getBloodDonation,
-    updateRequestStatus
+    updateRequestStatus,
+    getMyProfile
 }

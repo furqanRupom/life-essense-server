@@ -89,7 +89,7 @@ const requestBloodDonation = async (payload: IDonation, token: string) => {
 
 
     if (!validtoken) {
-        throw new AppError(httpStatus.UNAUTHORIZED, 'Invalid token !');
+        throw new AppError(httpStatus.UNAUTHORIZED, ' unauthorized error');
     }
 
     const requestUser = await prisma.user.findUniqueOrThrow({
@@ -167,7 +167,7 @@ const getBloodDonations = async (token: string) => {
     const validtoken = jwtHelpers.verifyToken(token, config.secret_access_token as string);
 
     if (!validtoken) {
-        throw new AppError(httpStatus.UNAUTHORIZED, 'Invalid token');
+        throw new AppError(httpStatus.UNAUTHORIZED, ' unauthorized error');
     }
 
     const requestUser = await prisma.user.findUniqueOrThrow({
@@ -210,7 +210,7 @@ const updateRequestStatus = async (payload: RequestStatus, token: string, reques
     }
     const validtoken = jwtHelpers.verifyToken(token, config.secret_access_token as string);
     if (!validtoken) {
-        throw new AppError(httpStatus.UNAUTHORIZED, 'Invalid token');
+        throw new AppError(httpStatus.UNAUTHORIZED, ' unauthorized error');
     }
     const { status }: any = payload;
     await prisma.user.findUniqueOrThrow({
@@ -225,13 +225,13 @@ const updateRequestStatus = async (payload: RequestStatus, token: string, reques
         }
     })
 
-    if(!findRequests){
+    if (!findRequests) {
         throw new AppError(httpStatus.NOT_FOUND, 'This donners have no rquestes for blood donation');
     }
 
     const updateStatus = await prisma.request.update({
         where: {
-            id:findRequests.id,
+            id: findRequests.id,
         },
         data: {
             requestStatus: status
@@ -240,9 +240,41 @@ const updateRequestStatus = async (payload: RequestStatus, token: string, reques
 
     return updateStatus;
 }
+
+
+const getMyProfile = async (token: string) => {
+    if (!token) {
+        throw new AppError(httpStatus.NOT_FOUND, 'token is not found');
+    }
+    const validtoken = jwtHelpers.verifyToken(token, config.secret_access_token as string);
+    if (!validtoken) {
+        throw new AppError(httpStatus.UNAUTHORIZED, ' unauthorized error');
+    }
+    const user = await prisma.user.findUniqueOrThrow({
+        where: {
+            email: validtoken.email
+        },
+        select:{
+            id: true,
+            name: true,
+            email: true,
+            location: true,
+            bloodType: true,
+            availability: true,
+            createdAt: true,
+            updatedAt: true,
+            profile:true
+        }
+    })
+
+    return user;
+
+
+}
 export const requestServices = {
     retrieveAllDonors,
     requestBloodDonation,
     getBloodDonations,
-    updateRequestStatus
+    updateRequestStatus,
+    getMyProfile
 }

@@ -23,5 +23,7 @@ router.get('/donation-request', requestController.getBloodDonation);
 
 router.put('/donation-request/:requestId', requestController.updateRequestStatus);
 
+router.get('/my-profile',requestController.getMyProfile);
+
 
 export const userRoutes = router;
