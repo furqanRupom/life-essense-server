@@ -8,7 +8,10 @@ const express_1 = __importDefault(require("express"));
 const user_controller_1 = require("./user.controller");
 const validateRequest_1 = __importDefault(require("../../middleware/validateRequest"));
 const user_validation_1 = require("./user.validation");
+const request_controller_1 = require("../requester/request.controller");
 const router = express_1.default.Router();
 router.post('/register', (0, validateRequest_1.default)(user_validation_1.userValidation.userSchemaValidation), user_controller_1.userController.createUser);
 router.post('/login', user_controller_1.userController.userLogin);
+/* donor routes */
+router.get('/donor-list', request_controller_1.requestController.retrieveDonors);
 exports.userRoutes = router;

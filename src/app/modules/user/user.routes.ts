@@ -14,7 +14,7 @@ router.post('/login', userController.userLogin);
 
 /* donor routes */
 
-router.get('/donor-list', requestController.retrieveDonors);
+router.get('/donor-list',requestController.retrieveDonors);
 
 
 export const userRoutes = router;
