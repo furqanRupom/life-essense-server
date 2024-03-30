@@ -5,6 +5,7 @@ import { Request, Response } from "express";
 import { requestServices } from "./request.service";
 import { userFilterableFields } from "./request.constant";
 import pick from "../../shared/pick";
+import AppError from "../../errors/AppError";
 
 
 const retrieveDonors = catchAsync(async (req: Request, res: Response) => {
@@ -22,6 +23,36 @@ const retrieveDonors = catchAsync(async (req: Request, res: Response) => {
     })
 })
 
+
+const requestBloodDonation = catchAsync(async (req: Request, res: Response) => {
+    const token = req.headers.authorization;
+
+   
+    const result = await requestServices.requestBloodDonation(req.body,token as string);
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Request successfully made",
+        data: result
+    })
+})
+
+
+const getBloodDonation = catchAsync(async (req: Request, res: Response) => {
+    const token = req.headers.authorization;
+    const result = await requestServices.getBloodDonations( token as string);
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Donation requests retrieved successfully",
+        data: result
+    })
+})
+
 export const requestController = {
-    retrieveDonors
+    retrieveDonors,
+    requestBloodDonation,
+    getBloodDonation
 }

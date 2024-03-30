@@ -8,7 +8,7 @@ const globalErrorHandler = (err, req, res, next) => {
     res.status(http_status_1.default.INTERNAL_SERVER_ERROR).json({
         success: false,
         message: err.message || "Something went wrong!",
-        error: err
+        errorDetails: err
     });
 };
 exports.default = globalErrorHandler;

@@ -27,6 +27,10 @@ exports.requestServices = void 0;
 const prisma_1 = __importDefault(require("../../shared/prisma"));
 const paginationHelpers_1 = require("../../helpers/paginationHelpers");
 const request_constant_1 = require("./request.constant");
+const AppError_1 = __importDefault(require("../../errors/AppError"));
+const http_status_1 = __importDefault(require("http-status"));
+const jwtHelpers_1 = require("../../helpers/jwtHelpers");
+const config_1 = require("../../config");
 const retrieveAllDonors = (params, options) => __awaiter(void 0, void 0, void 0, function* () {
     const { page, limit, skip } = (0, paginationHelpers_1.paginationHelpers)(options);
     console.log(options);
@@ -67,9 +71,13 @@ const retrieveAllDonors = (params, options) => __awaiter(void 0, void 0, void 0,
         select: {
             id: true,
             email: true,
+            location: true,
+            bloodType: true,
+            availability: true,
             createdAt: true,
             updatedAt: true,
-            profile: true
+            profile: true,
+            doner: true,
         }
     });
     const total = yield prisma_1.default.user.count({
@@ -84,6 +92,109 @@ const retrieveAllDonors = (params, options) => __awaiter(void 0, void 0, void 0,
         data: result
     };
 });
+const requestBloodDonation = (payload, token) => __awaiter(void 0, void 0, void 0, function* () {
+    if (!token) {
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'token is not found !');
+    }
+    const validtoken = jwtHelpers_1.jwtHelpers.verifyToken(token, config_1.config.secret_access_token);
+    if (!validtoken) {
+        throw new AppError_1.default(http_status_1.default.UNAUTHORIZED, 'Invalid token !');
+    }
+    const requestUser = yield prisma_1.default.user.findUniqueOrThrow({
+        where: {
+            email: validtoken.email
+        }
+    });
+    yield prisma_1.default.user.findUniqueOrThrow({
+        where: {
+            id: payload.donorId
+        }
+    });
+    const updateAvailablity = yield prisma_1.default.user.update({
+        where: {
+            email: validtoken.email
+        },
+        data: {
+            availability: true
+        }
+    });
+    if (!updateAvailablity) {
+        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, 'cannont update availablity');
+    }
+    const result = yield prisma_1.default.request.create({
+        data: {
+            donorId: payload.donorId,
+            requesterId: requestUser.id,
+            phoneNumber: payload.phoneNumber,
+            dateOfDonation: payload.dateOfDonation,
+            hospitalName: payload.hospitalName,
+            hospitalAddress: payload.hospitalAddress,
+            reason: payload.reason
+        },
+        select: {
+            id: true,
+            donorId: true,
+            phoneNumber: true,
+            dateOfDonation: true,
+            hospitalName: true,
+            hospitalAddress: true,
+            reason: true,
+            createdAt: true,
+            updatedAt: true,
+            donor: {
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    location: true,
+                    bloodType: true,
+                    availability: true,
+                    createdAt: true,
+                    updatedAt: true,
+                    profile: true,
+                }
+            }
+        }
+    });
+    return result;
+});
+const getBloodDonations = (token) => __awaiter(void 0, void 0, void 0, function* () {
+    if (!token) {
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'token is not found ');
+    }
+    const validtoken = jwtHelpers_1.jwtHelpers.verifyToken(token, config_1.config.secret_access_token);
+    if (!validtoken) {
+        throw new AppError_1.default(http_status_1.default.UNAUTHORIZED, 'Invalid token');
+    }
+    const requestUser = yield prisma_1.default.user.findUniqueOrThrow({
+        where: {
+            email: validtoken.email
+        }
+    });
+    const requestes = yield prisma_1.default.request.findMany({
+        where: {
+            requesterId: requestUser.id,
+        },
+        include: {
+            requester: {
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    location: true,
+                    bloodType: true,
+                    availability: true,
+                }
+            },
+        }
+    });
+    if (requestes.length < 0) {
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'no request found');
+    }
+    return requestes;
+});
 exports.requestServices = {
-    retrieveAllDonors
+    retrieveAllDonors,
+    requestBloodDonation,
+    getBloodDonations
 };
