@@ -28,10 +28,6 @@ const createUserIntoDB = async (payload: UserData) => {
     await tx.userProfile.create({
       data: {
         userId: user.id,
-        age: payload.age,
-        bio: payload.bio,
-        lastDonationDate: payload.lastDonationDate,
-
       }
     })
 
@@ -41,7 +37,6 @@ const createUserIntoDB = async (payload: UserData) => {
       },
       include: {
         profile: true,
-
       }
     })
     const { password, ...withoutPassData } = getUser;
@@ -66,8 +61,8 @@ const login = async (payload: { email: string, password: string }) => {
     throw new Error("Password is incorrect");
   }
 
-  const { name, email } = userData
-  const accessToken = jwtHelpers.generateToken({ name, email }, config.secret_access_token as string, config.access_token_expires_in as string);
+  const { name, email,role } = userData
+  const accessToken = jwtHelpers.generateToken({ name, email,role }, config.secret_access_token as string, config.access_token_expires_in as string);
 
   return {
     id: userData.id,
@@ -76,6 +71,8 @@ const login = async (payload: { email: string, password: string }) => {
     accessToken: accessToken
   }
 }
+
+
 
 const getMyProfile = async (token: string) => {
   if (!token) {

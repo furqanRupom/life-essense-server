@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import { userController } from './user.controller';
 import validateRequest from '../../middleware/validateRequest';
 import { userValidation } from './user.validation';
@@ -12,7 +12,11 @@ import prisma from '../../shared/prisma';
 const router = express.Router();
 
 
-router.post('/register', validateRequest(userValidation.userSchemaValidation), userController.createUser);
+router.post('/register',(req:Request,res:Response,next:NextFunction)=>{
+   
+    console.log(req.body)
+    next();
+}, validateRequest(userValidation.userSchemaValidation), userController.createUser);
 router.post('/login', userController.userLogin);
 
 

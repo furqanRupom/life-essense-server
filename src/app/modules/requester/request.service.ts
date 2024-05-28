@@ -13,14 +13,13 @@ import { paginationHelper } from "../../helpers/paginationHelpers";
 
 const retrieveAllDonors = async (params: any, options: IPaginationOptions) => {
     const { page, limit, skip } = paginationHelper.calculatePagination(options);
-  
+
 
     const { searchTerm, ...filterData } = params;
-    console.log({filterData})
     const andCondions: Prisma.UserWhereInput[] = [];
 
     if (params.searchTerm) {
-       
+
         andCondions.push({
             OR: userSearchAbleFields?.map(field => ({
                 [field]: {
@@ -43,7 +42,7 @@ const retrieveAllDonors = async (params: any, options: IPaginationOptions) => {
         })
     };
 
-    
+
 
     const whereConditons: Prisma.UserWhereInput = andCondions.length > 0 ? { AND: andCondions } : {};
 
@@ -229,7 +228,8 @@ const updateRequestStatus = async (payload: RequestStatus, token: string, reques
     if (!validtoken) {
         throw new AppError(httpStatus.UNAUTHORIZED, ' unauthorized error');
     }
-    const {requestStatus}: any = payload;
+    const { requestStatus }: any = payload;
+    console.log(payload);
     await prisma.user.findUniqueOrThrow({
         where: {
             email: validtoken.email
@@ -243,15 +243,14 @@ const updateRequestStatus = async (payload: RequestStatus, token: string, reques
     })
 
     if (!findRequests) {
-        throw new AppError(httpStatus.NOT_FOUND, 'This donners have no rquestes for blood donation');
+        throw new AppError(httpStatus.NOT_FOUND, 'This donner have no rquestes for blood donation');
     }
-
     const updateStatus = await prisma.request.update({
         where: {
             id: findRequests.id,
         },
         data: {
-            requestStatus
+            requestStatus:requestStatus
         }
     })
 
