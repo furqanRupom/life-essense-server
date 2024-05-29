@@ -13,11 +13,11 @@ const router = express.Router();
 
 
 router.post('/register',(req:Request,res:Response,next:NextFunction)=>{
-   
-    console.log(req.body)
     next();
 }, validateRequest(userValidation.userSchemaValidation), userController.createUser);
-router.post('/login', userController.userLogin);
+router.post('/login', (req: Request, res: Response, next: NextFunction) => {
+    next();
+}, userController.userLogin);
 
 
 /* donor routes */
@@ -25,7 +25,7 @@ router.post('/login', userController.userLogin);
 router.get('/donor-list',requestController.retrieveDonors);
 
 router.post('/donation-request',validateRequest(requestValidation.requestSchemaValidation), requestController.requestBloodDonation);
-
+router.get('/donor-request',requestController.getDonorRequests);
 router.get('/donation-request', requestController.getBloodDonation);
 
 router.put('/donation-request/:requestId', requestController.updateRequestStatus);

@@ -51,6 +51,19 @@ const getBloodDonation = catchAsync(async (req: Request, res: Response) => {
     })
 })
 
+const getDonorRequests = catchAsync(async (req: Request, res: Response) => {
+    const token = req.headers.authorization;
+    const result = await requestServices.getDonorRequests(token as string);
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Donor requests retrieved successfully",
+        data: result
+    })
+})
+
+
 
 const updateRequestStatus = catchAsync(async (req: Request, res: Response) => {
     const token  = req.headers.authorization;
@@ -74,5 +87,5 @@ export const requestController = {
     requestBloodDonation,
     getBloodDonation,
     updateRequestStatus,
-    
+    getDonorRequests
 }

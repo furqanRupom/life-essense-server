@@ -52,6 +52,16 @@ const getBloodDonation = (0, catchAync_1.default)((req, res) => __awaiter(void 0
         data: result
     });
 }));
+const getDonorRequests = (0, catchAync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const token = req.headers.authorization;
+    const result = yield request_service_1.requestServices.getDonorRequests(token);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: "Donor requests retrieved successfully",
+        data: result
+    });
+}));
 const updateRequestStatus = (0, catchAync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const token = req.headers.authorization;
     const requestId = req.params.requestId;
@@ -68,4 +78,5 @@ exports.requestController = {
     requestBloodDonation,
     getBloodDonation,
     updateRequestStatus,
+    getDonorRequests
 };

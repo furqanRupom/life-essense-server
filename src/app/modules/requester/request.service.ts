@@ -196,6 +196,51 @@ const getBloodDonations = async (token: string) => {
             requesterId: requestUser.id,
         },
         include: {
+            donor: {
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    location: true,
+                    bloodType: true,
+                    availability: true,
+                }
+            },
+
+        }
+
+    })
+
+    if (requestes.length < 0) {
+        throw new AppError(httpStatus.NOT_FOUND, 'no request found')
+    }
+
+    return requestes;
+
+}
+
+
+const getDonorRequests = async (token: string) => {
+    if (!token) {
+        throw new AppError(httpStatus.NOT_FOUND, 'token is not found ');
+    }
+
+    const validtoken = jwtHelpers.verifyToken(token, config.secret_access_token as string);
+
+    if (!validtoken) {
+        throw new AppError(httpStatus.UNAUTHORIZED, ' unauthorized error');
+    }
+
+    const donorUser = await prisma.user.findUniqueOrThrow({
+        where: {
+            email: validtoken.email
+        }
+    })
+    const requestes = await prisma.request.findMany({
+        where: {
+            donorId: donorUser.id,
+        },
+        include: {
             requester: {
                 select: {
                     id: true,
@@ -218,6 +263,9 @@ const getBloodDonations = async (token: string) => {
     return requestes;
 
 }
+
+
+
 
 const updateRequestStatus = async (payload: RequestStatus, token: string, requestId: any) => {
 
@@ -264,4 +312,5 @@ export const requestServices = {
     requestBloodDonation,
     getBloodDonations,
     updateRequestStatus,
+    getDonorRequests
 }

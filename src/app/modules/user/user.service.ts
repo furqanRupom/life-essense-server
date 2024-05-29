@@ -64,11 +64,13 @@ const login = async (payload: { email: string, password: string }) => {
   const { name, email,role } = userData
   const accessToken = jwtHelpers.generateToken({ name, email,role }, config.secret_access_token as string, config.access_token_expires_in as string);
 
+  const refreshToken  = jwtHelpers.generateToken({name,email,role},
+    config.refresh_token as string, config.refresh_token_exp as string
+  )
+
   return {
-    id: userData.id,
-    name: userData.name,
-    email: userData.email,
-    accessToken: accessToken
+    accessToken: accessToken,
+    refreshToken:refreshToken
   }
 }
 

@@ -17,6 +17,8 @@ const createUser = catchAsync(async(req:Request,res:Response) => {
 
 
 const userLogin = catchAsync(async (req: Request, res: Response) => {
+
+
     const result = await userServices.login(req.body);
     sendResponse(res, {
         success: true,

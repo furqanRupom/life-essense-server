@@ -35,7 +35,6 @@ const retrieveAllDonors = (params, options) => __awaiter(void 0, void 0, void 0,
     var _a;
     const { page, limit, skip } = paginationHelpers_1.paginationHelper.calculatePagination(options);
     const { searchTerm } = params, filterData = __rest(params, ["searchTerm"]);
-    console.log({ filterData });
     const andCondions = [];
     if (params.searchTerm) {
         andCondions.push({
@@ -188,6 +187,41 @@ const getBloodDonations = (token) => __awaiter(void 0, void 0, void 0, function*
             requesterId: requestUser.id,
         },
         include: {
+            donor: {
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    location: true,
+                    bloodType: true,
+                    availability: true,
+                }
+            },
+        }
+    });
+    if (requestes.length < 0) {
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'no request found');
+    }
+    return requestes;
+});
+const getDonorRequests = (token) => __awaiter(void 0, void 0, void 0, function* () {
+    if (!token) {
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'token is not found ');
+    }
+    const validtoken = jwtHelpers_1.jwtHelpers.verifyToken(token, config_1.config.secret_access_token);
+    if (!validtoken) {
+        throw new AppError_1.default(http_status_1.default.UNAUTHORIZED, ' unauthorized error');
+    }
+    const donorUser = yield prisma_1.default.user.findUniqueOrThrow({
+        where: {
+            email: validtoken.email
+        }
+    });
+    const requestes = yield prisma_1.default.request.findMany({
+        where: {
+            donorId: donorUser.id,
+        },
+        include: {
             requester: {
                 select: {
                     id: true,
@@ -214,6 +248,7 @@ const updateRequestStatus = (payload, token, requestId) => __awaiter(void 0, voi
         throw new AppError_1.default(http_status_1.default.UNAUTHORIZED, ' unauthorized error');
     }
     const { requestStatus } = payload;
+    console.log(payload);
     yield prisma_1.default.user.findUniqueOrThrow({
         where: {
             email: validtoken.email
@@ -225,14 +260,14 @@ const updateRequestStatus = (payload, token, requestId) => __awaiter(void 0, voi
         }
     });
     if (!findRequests) {
-        throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'This donners have no rquestes for blood donation');
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'This donner have no rquestes for blood donation');
     }
     const updateStatus = yield prisma_1.default.request.update({
         where: {
             id: findRequests.id,
         },
         data: {
-            requestStatus
+            requestStatus: requestStatus
         }
     });
     return updateStatus;
@@ -242,4 +277,5 @@ exports.requestServices = {
     requestBloodDonation,
     getBloodDonations,
     updateRequestStatus,
+    getDonorRequests
 };

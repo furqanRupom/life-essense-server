@@ -23,11 +23,11 @@ const userSchemaValidation = zod_1.z.object({
         }),
         age: zod_1.z.number({
             required_error: "age is required"
-        }),
+        }).optional(),
         bio: zod_1.z.string().optional(),
         lastDonationDate: zod_1.z.string({
             required_error: "lastDonationDate is required"
-        }),
+        }).optional(),
     })
 });
 exports.userValidation = {

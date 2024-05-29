@@ -46,9 +46,6 @@ const createUserIntoDB = (payload) => __awaiter(void 0, void 0, void 0, function
         yield tx.userProfile.create({
             data: {
                 userId: user.id,
-                age: payload.age,
-                bio: payload.bio,
-                lastDonationDate: payload.lastDonationDate,
             }
         });
         const getUser = yield tx.user.findUniqueOrThrow({
@@ -75,13 +72,12 @@ const login = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     if (!isMatch) {
         throw new Error("Password is incorrect");
     }
-    const { name, email } = userData;
-    const accessToken = jwtHelpers_1.jwtHelpers.generateToken({ name, email }, config_1.config.secret_access_token, config_1.config.access_token_expires_in);
+    const { name, email, role } = userData;
+    const accessToken = jwtHelpers_1.jwtHelpers.generateToken({ name, email, role }, config_1.config.secret_access_token, config_1.config.access_token_expires_in);
+    const refreshToken = jwtHelpers_1.jwtHelpers.generateToken({ name, email, role }, config_1.config.refresh_token, config_1.config.refresh_token_exp);
     return {
-        id: userData.id,
-        name: userData.name,
-        email: userData.email,
-        accessToken: accessToken
+        accessToken: accessToken,
+        refreshToken: refreshToken
     };
 });
 const getMyProfile = (token) => __awaiter(void 0, void 0, void 0, function* () {
