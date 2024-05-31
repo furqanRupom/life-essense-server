@@ -15,10 +15,10 @@ const retrieveAllDonors = async (params: any, options: IPaginationOptions) => {
     const { page, limit, skip } = paginationHelper.calculatePagination(options);
 
 
-    const { searchTerm, ...filterData } = params;
+    const { searchTerm, availability, ...filterData } = params;
     const andCondions: Prisma.UserWhereInput[] = [];
 
-    if (params.searchTerm) {
+    if (searchTerm) {
 
         andCondions.push({
             OR: userSearchAbleFields?.map(field => ({
@@ -31,17 +31,32 @@ const retrieveAllDonors = async (params: any, options: IPaginationOptions) => {
         })
     };
 
-    if (Object.keys(filterData).length > 0) {
-        console.log('filter : working')
+    if (availability) {
+        const value = availability == 'true' ? true : false
+        console.log(value)
         andCondions.push({
-            AND: Object.keys(filterData)?.map(key => ({
-                [key]: {
-                    equals: (filterData as any)[key]
+            AND: {
+                availability: {
+                    equals: value
                 }
-            }))
+            }
         })
-    };
 
+    }
+    if (Object.keys(filterData).length > 0) {
+            andCondions.push({
+                AND: Object.keys(filterData)?.map(key => ({
+                    [key]: {
+                        equals: (filterData as any)[key]
+                    }
+                }))
+            })
+    
+        
+    };
+    
+
+  
 
 
     const whereConditons: Prisma.UserWhereInput = andCondions.length > 0 ? { AND: andCondions } : {};
@@ -59,6 +74,7 @@ const retrieveAllDonors = async (params: any, options: IPaginationOptions) => {
         },
         select: {
             id: true,
+            name:true,
             email: true,
             location: true,
             bloodType: true,

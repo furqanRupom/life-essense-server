@@ -10,6 +10,7 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const routes_1 = __importDefault(require("./app/routes"));
 const globalErrorHandler_1 = __importDefault(require("./app/middleware/globalErrorHandler"));
 dotenv_1.default.config();
+// https://life-essence.vercel.app
 const app = (0, express_1.default)();
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use((0, cors_1.default)({ origin: "https://life-essence.vercel.app", credentials: true }));

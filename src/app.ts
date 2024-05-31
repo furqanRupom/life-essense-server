@@ -6,7 +6,7 @@ import router from "./app/routes";
 import globalErrorHandler from "./app/middleware/globalErrorHandler";
 
 dotenv.config();
-
+// https://life-essence.vercel.app
 const app: Application = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({ origin:"https://life-essence.vercel.app",credentials:true}))

@@ -34,9 +34,9 @@ const paginationHelpers_1 = require("../../helpers/paginationHelpers");
 const retrieveAllDonors = (params, options) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     const { page, limit, skip } = paginationHelpers_1.paginationHelper.calculatePagination(options);
-    const { searchTerm } = params, filterData = __rest(params, ["searchTerm"]);
+    const { searchTerm, availability } = params, filterData = __rest(params, ["searchTerm", "availability"]);
     const andCondions = [];
-    if (params.searchTerm) {
+    if (searchTerm) {
         andCondions.push({
             OR: request_constant_1.userSearchAbleFields === null || request_constant_1.userSearchAbleFields === void 0 ? void 0 : request_constant_1.userSearchAbleFields.map(field => ({
                 [field]: {
@@ -47,8 +47,18 @@ const retrieveAllDonors = (params, options) => __awaiter(void 0, void 0, void 0,
         });
     }
     ;
+    if (availability) {
+        const value = availability == 'true' ? true : false;
+        console.log(value);
+        andCondions.push({
+            AND: {
+                availability: {
+                    equals: value
+                }
+            }
+        });
+    }
     if (Object.keys(filterData).length > 0) {
-        console.log('filter : working');
         andCondions.push({
             AND: (_a = Object.keys(filterData)) === null || _a === void 0 ? void 0 : _a.map(key => ({
                 [key]: {
@@ -72,6 +82,7 @@ const retrieveAllDonors = (params, options) => __awaiter(void 0, void 0, void 0,
         },
         select: {
             id: true,
+            name: true,
             email: true,
             location: true,
             bloodType: true,
