@@ -22,6 +22,7 @@ router.get('/donor-list', request_controller_1.requestController.retrieveDonors)
 router.post('/donation-request', (0, validateRequest_1.default)(request_validation_1.requestValidation.requestSchemaValidation), request_controller_1.requestController.requestBloodDonation);
 router.get('/donor-request', request_controller_1.requestController.getDonorRequests);
 router.get('/donation-request', request_controller_1.requestController.getBloodDonation);
+router.get('/donor-details/:id', request_controller_1.requestController.getSpecificDonors);
 router.put('/donation-request/:requestId', request_controller_1.requestController.updateRequestStatus);
 router.get('/my-profile', user_controller_1.userController.getMyProfile);
 router.put('/my-profile', user_controller_1.userController.updateMyProfile);

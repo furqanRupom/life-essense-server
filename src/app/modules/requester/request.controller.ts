@@ -66,6 +66,7 @@ const getDonorRequests = catchAsync(async (req: Request, res: Response) => {
 
 
 const updateRequestStatus = catchAsync(async (req: Request, res: Response) => {
+
     const token  = req.headers.authorization;
     const requestId = req.params.requestId;
     const result = await requestServices.updateRequestStatus(req.body,token as string, requestId);
@@ -78,6 +79,17 @@ const updateRequestStatus = catchAsync(async (req: Request, res: Response) => {
 })
 
 
+const getSpecificDonors = catchAsync(async(req:Request,res:Response) => {
+     const id = req.params.id;
+     const result =  await requestServices.getSpecificDonorDetails(id);
+
+     sendResponse(res,{
+        success:true,
+        statusCode:200,
+        message:"Donors Details fetched successfully ",
+        data:result
+     })
+})
 
 
 
@@ -87,5 +99,6 @@ export const requestController = {
     requestBloodDonation,
     getBloodDonation,
     updateRequestStatus,
-    getDonorRequests
+    getDonorRequests,
+    getSpecificDonors
 }

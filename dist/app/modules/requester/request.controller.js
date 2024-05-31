@@ -73,10 +73,21 @@ const updateRequestStatus = (0, catchAync_1.default)((req, res) => __awaiter(voi
         data: result
     });
 }));
+const getSpecificDonors = (0, catchAync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = req.params.id;
+    const result = yield request_service_1.requestServices.getSpecificDonorDetails(id);
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: 200,
+        message: "Donors Details fetched successfully ",
+        data: result
+    });
+}));
 exports.requestController = {
     retrieveDonors,
     requestBloodDonation,
     getBloodDonation,
     updateRequestStatus,
-    getDonorRequests
+    getDonorRequests,
+    getSpecificDonors
 };

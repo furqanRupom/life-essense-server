@@ -283,10 +283,25 @@ const updateRequestStatus = (payload, token, requestId) => __awaiter(void 0, voi
     });
     return updateStatus;
 });
+const getSpecificDonorDetails = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield prisma_1.default.user.findFirst({
+        where: {
+            id
+        },
+        include: {
+            doner: true
+        }
+    });
+    if (!result) {
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, "Donors not found");
+    }
+    return result;
+});
 exports.requestServices = {
     retrieveAllDonors,
     requestBloodDonation,
     getBloodDonations,
     updateRequestStatus,
-    getDonorRequests
+    getDonorRequests,
+    getSpecificDonorDetails
 };

@@ -11,7 +11,7 @@ const main = async () => {
     let server: Server
 
     server = app.listen(config.port, () => {
-        console.log('the server is running on port 3000')
+        console.log('the server is running on port 5000')
     })
 }
 

@@ -17,7 +17,7 @@ const config_1 = require("./app/config");
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
     let server;
     server = app_1.default.listen(config_1.config.port, () => {
-        console.log('the server is running on port 3000');
+        console.log('the server is running on port 5000');
     });
 });
 main();

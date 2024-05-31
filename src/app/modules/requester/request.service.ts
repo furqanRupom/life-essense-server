@@ -323,10 +323,30 @@ const updateRequestStatus = async (payload: RequestStatus, token: string, reques
 
 
 
+const getSpecificDonorDetails = async (id:string) => {
+    const result = await prisma.user.findFirst({
+       where:{
+        id
+       },
+       include:{
+        doner:true
+       }
+    });
+
+    if(!result){
+        throw new AppError(httpStatus.NOT_FOUND,"Donors not found")
+    }
+
+    return result;
+}
+
+
+
 export const requestServices = {
     retrieveAllDonors,
     requestBloodDonation,
     getBloodDonations,
     updateRequestStatus,
-    getDonorRequests
+    getDonorRequests,
+    getSpecificDonorDetails
 }
