@@ -247,10 +247,15 @@ const getDonorRequests = (token) => __awaiter(void 0, void 0, void 0, function* 
                     id: true,
                     name: true,
                     email: true,
-                    location: true,
+                    image: true,
                     bloodType: true,
+                    location: true,
+                    emergencyPhoneNumber: true,
+                    phoneNumber: true,
                     availability: true,
-                }
+                    socialMediaMethods: true,
+                    profile: true,
+                },
             },
         }
     });

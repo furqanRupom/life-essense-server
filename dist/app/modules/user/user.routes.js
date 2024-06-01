@@ -23,7 +23,10 @@ router.post('/donation-request', (0, validateRequest_1.default)(request_validati
 router.get('/donor-request', request_controller_1.requestController.getDonorRequests);
 router.get('/donation-request', request_controller_1.requestController.getBloodDonation);
 router.get('/donor-details/:id', request_controller_1.requestController.getSpecificDonors);
-router.put('/donation-request/:requestId', request_controller_1.requestController.updateRequestStatus);
+router.put('/donation-request/:requestId', (req, res, next) => {
+    console.log(req.body);
+    next();
+}, request_controller_1.requestController.updateRequestStatus);
 router.get('/my-profile', user_controller_1.userController.getMyProfile);
 router.put('/my-profile', user_controller_1.userController.updateMyProfile);
 exports.userRoutes = router;

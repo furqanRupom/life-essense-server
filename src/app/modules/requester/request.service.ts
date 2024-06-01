@@ -229,6 +229,7 @@ const getBloodDonations = async (token: string) => {
                     bloodType:true,
                     location: true,
                     emergencyPhoneNumber: true,
+                    
                     phoneNumber: true,
                     availability: true,
                     socialMediaMethods: true,
@@ -273,15 +274,20 @@ const getDonorRequests = async (token: string) => {
         include: {
             requester: {
                 select: {
-                    id: true,
+                    id:true,
                     name: true,
                     email: true,
-                    location: true,
+                    image: true,
                     bloodType: true,
+                    location: true,
+                    emergencyPhoneNumber: true,
+                    phoneNumber: true,
                     availability: true,
-                }
-            },
+                    socialMediaMethods: true,
+                    profile: true,
+                },
 
+            },
         }
 
     })

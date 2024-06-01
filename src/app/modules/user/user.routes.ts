@@ -28,7 +28,10 @@ router.post('/donation-request', validateRequest(requestValidation.requestSchema
 router.get('/donor-request',requestController.getDonorRequests);
 router.get('/donation-request', requestController.getBloodDonation);
 router.get('/donor-details/:id',requestController.getSpecificDonors)
-router.put('/donation-request/:requestId', requestController.updateRequestStatus);
+router.put('/donation-request/:requestId',(req,res,next) => {
+       console.log(req.body)
+       next();
+}, requestController.updateRequestStatus);
 
 router.get('/my-profile',userController.getMyProfile);
 router.put('/my-profile', userController.updateMyProfile);
