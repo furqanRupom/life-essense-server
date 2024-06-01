@@ -113,6 +113,7 @@ const retrieveAllDonors = async (params: any, options: IPaginationOptions) => {
 
 
 const requestBloodDonation = async (payload: IDonation, token: string) => {
+    console.log(payload);
     if (!token) {
         throw new AppError(httpStatus.NOT_FOUND, 'token is not found !');
     }
@@ -149,14 +150,21 @@ const requestBloodDonation = async (payload: IDonation, token: string) => {
     if (!updateAvailablity) {
         throw new AppError(httpStatus.BAD_REQUEST, 'cannont update availablity')
     }
+    
 
+
+  
 
     const result = await prisma.request.create({
         data: {
             donorId: payload.donorId,
+            name:payload.name,
+            email:payload.email,
+            bloodType:payload.bloodType,
             requesterId: requestUser.id,
             phoneNumber: payload.phoneNumber,
             dateOfDonation: payload.dateOfDonation,
+            timeOfDonation:payload.timeOfDonation,
             hospitalName: payload.hospitalName,
             hospitalAddress: payload.hospitalAddress,
             reason: payload.reason

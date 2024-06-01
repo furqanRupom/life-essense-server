@@ -24,7 +24,7 @@ router.post('/login', (req: Request, res: Response, next: NextFunction) => {
 
 router.get('/donor-list',requestController.retrieveDonors);
 
-router.post('/donation-request',validateRequest(requestValidation.requestSchemaValidation), requestController.requestBloodDonation);
+router.post('/donation-request', validateRequest(requestValidation.requestSchemaValidation), requestController.requestBloodDonation);
 router.get('/donor-request',requestController.getDonorRequests);
 router.get('/donation-request', requestController.getBloodDonation);
 router.get('/donor-details/:id',requestController.getSpecificDonors)

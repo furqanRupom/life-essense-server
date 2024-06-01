@@ -17,41 +17,43 @@ enum Role {
   ADMIN
   USER
 }
+
 enum BloodDonate {
   Yes
   no
 }
+
 // User model
 
 model SocialMediaMethods {
-  id String  @id @default(uuid())
-  userId String @unique
-  facebook String?
+  id        String  @id @default(uuid())
+  userId    String  @unique
+  facebook  String?
   instagram String?
-  twitter String?
-  whatsApp String?
-  user User @relation(fields: [userId],references: [id])
+  twitter   String?
+  whatsApp  String?
+  user      User    @relation(fields: [userId], references: [id])
 }
 
 model User {
-  id           String       @id @default(uuid())
-  name         String
-  email        String       @unique
-  role         Role        @default(USER) 
-  password     String
-  bloodType    BloodGroup
-  image String?
-  phoneNumber String?
+  id                   String              @id @default(uuid())
+  name                 String
+  email                String              @unique
+  role                 Role                @default(USER)
+  password             String
+  bloodType            BloodGroup
+  image                String?
+  phoneNumber          String?
   emergencyPhoneNumber String?
-  location     String
-  bloodDonate  BloodDonate?    @default(no)
-  availability Boolean      @default(false)
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
-  profile      UserProfile?
-  doner        Request[]    @relation("donor")
-  requester    Request[]    @relation("requester")
-  socialMediaMethods SocialMediaMethods?
+  location             String
+  bloodDonate          BloodDonate?        @default(no)
+  availability         Boolean             @default(false)
+  createdAt            DateTime            @default(now())
+  updatedAt            DateTime            @updatedAt
+  profile              UserProfile?
+  doner                Request[]           @relation("donor")
+  requester            Request[]           @relation("requester")
+  socialMediaMethods   SocialMediaMethods?
 
   @@map("users")
 }
@@ -65,6 +67,7 @@ model UserProfile {
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
   user             User     @relation(fields: [userId], references: [id])
+
   @@map("userprofiles")
 }
 
@@ -73,9 +76,13 @@ model UserProfile {
 model Request {
   id              String        @id @default(uuid())
   donorId         String
+  name            String?
+  email           String?
+  bloodType       String?
   requesterId     String
   phoneNumber     String
   dateOfDonation  String
+  timeOfDonation  String?
   hospitalName    String
   hospitalAddress String
   reason          String
@@ -96,12 +103,12 @@ enum RequestStatus {
 }
 
 enum BloodGroup {
-A_POSITIVE 
-A_NEGATIVE
-B_POSITIVE
-B_NEGATIVE
-AB_POSITIVE
-AB_NEGATIVE
-O_POSITIVE
-O_NEGATIVE 
+  A_POSITIVE
+  A_NEGATIVE
+  B_POSITIVE
+  B_NEGATIVE
+  AB_POSITIVE
+  AB_NEGATIVE
+  O_POSITIVE
+  O_NEGATIVE
 }
