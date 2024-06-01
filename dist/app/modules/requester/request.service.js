@@ -115,6 +115,7 @@ const retrieveAllDonors = (params, options) => __awaiter(void 0, void 0, void 0,
     };
 });
 const requestBloodDonation = (payload, token) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log(payload);
     if (!token) {
         throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'token is not found !');
     }
@@ -146,9 +147,13 @@ const requestBloodDonation = (payload, token) => __awaiter(void 0, void 0, void 
     const result = yield prisma_1.default.request.create({
         data: {
             donorId: payload.donorId,
+            name: payload.name,
+            email: payload.email,
+            bloodType: payload.bloodType,
             requesterId: requestUser.id,
             phoneNumber: payload.phoneNumber,
             dateOfDonation: payload.dateOfDonation,
+            timeOfDonation: payload.timeOfDonation,
             hospitalName: payload.hospitalName,
             hospitalAddress: payload.hospitalAddress,
             reason: payload.reason
@@ -200,13 +205,17 @@ const getBloodDonations = (token) => __awaiter(void 0, void 0, void 0, function*
         include: {
             donor: {
                 select: {
-                    id: true,
                     name: true,
                     email: true,
-                    location: true,
+                    image: true,
                     bloodType: true,
+                    location: true,
+                    emergencyPhoneNumber: true,
+                    phoneNumber: true,
                     availability: true,
-                }
+                    socialMediaMethods: true,
+                    profile: true,
+                },
             },
         }
     });

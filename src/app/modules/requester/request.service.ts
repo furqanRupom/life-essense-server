@@ -44,19 +44,19 @@ const retrieveAllDonors = async (params: any, options: IPaginationOptions) => {
 
     }
     if (Object.keys(filterData).length > 0) {
-            andCondions.push({
-                AND: Object.keys(filterData)?.map(key => ({
-                    [key]: {
-                        equals: (filterData as any)[key]
-                    }
-                }))
-            })
-    
-        
-    };
-    
+        andCondions.push({
+            AND: Object.keys(filterData)?.map(key => ({
+                [key]: {
+                    equals: (filterData as any)[key]
+                }
+            }))
+        })
 
-  
+
+    };
+
+
+
 
 
     const whereConditons: Prisma.UserWhereInput = andCondions.length > 0 ? { AND: andCondions } : {};
@@ -74,7 +74,7 @@ const retrieveAllDonors = async (params: any, options: IPaginationOptions) => {
         },
         select: {
             id: true,
-            name:true,
+            name: true,
             email: true,
             location: true,
             bloodType: true,
@@ -150,21 +150,21 @@ const requestBloodDonation = async (payload: IDonation, token: string) => {
     if (!updateAvailablity) {
         throw new AppError(httpStatus.BAD_REQUEST, 'cannont update availablity')
     }
-    
 
 
-  
+
+
 
     const result = await prisma.request.create({
         data: {
             donorId: payload.donorId,
-            name:payload.name,
-            email:payload.email,
-            bloodType:payload.bloodType,
+            name: payload.name,
+            email: payload.email,
+            bloodType: payload.bloodType,
             requesterId: requestUser.id,
             phoneNumber: payload.phoneNumber,
             dateOfDonation: payload.dateOfDonation,
-            timeOfDonation:payload.timeOfDonation,
+            timeOfDonation: payload.timeOfDonation,
             hospitalName: payload.hospitalName,
             hospitalAddress: payload.hospitalAddress,
             reason: payload.reason
@@ -190,6 +190,7 @@ const requestBloodDonation = async (payload: IDonation, token: string) => {
                     createdAt: true,
                     updatedAt: true,
                     profile: true,
+
                 }
             }
         }
@@ -222,13 +223,18 @@ const getBloodDonations = async (token: string) => {
         include: {
             donor: {
                 select: {
-                    id: true,
                     name: true,
                     email: true,
+                    image: true,
+                    bloodType:true,
                     location: true,
-                    bloodType: true,
+                    emergencyPhoneNumber: true,
+                    phoneNumber: true,
                     availability: true,
-                }
+                    socialMediaMethods: true,
+                    profile: true,
+                },
+
             },
 
         }
@@ -322,7 +328,7 @@ const updateRequestStatus = async (payload: RequestStatus, token: string, reques
             id: findRequests.id,
         },
         data: {
-            requestStatus:requestStatus
+            requestStatus: requestStatus
         }
     })
 
@@ -331,18 +337,18 @@ const updateRequestStatus = async (payload: RequestStatus, token: string, reques
 
 
 
-const getSpecificDonorDetails = async (id:string) => {
+const getSpecificDonorDetails = async (id: string) => {
     const result = await prisma.user.findFirst({
-       where:{
-        id
-       },
-       include:{
-        doner:true
-       }
+        where: {
+            id
+        },
+        include: {
+            doner: true
+        }
     });
 
-    if(!result){
-        throw new AppError(httpStatus.NOT_FOUND,"Donors not found")
+    if (!result) {
+        throw new AppError(httpStatus.NOT_FOUND, "Donors not found")
     }
 
     return result;

@@ -7,11 +7,23 @@ const requestSchemaValidation = zod_1.z.object({
         donorId: zod_1.z.string({
             required_error: "donnerId is required"
         }),
+        name: zod_1.z.string({
+            required_error: "name is required"
+        }),
+        email: zod_1.z.string({
+            required_error: "email is required"
+        }),
+        bloodType: zod_1.z.string({
+            required_error: "email is required"
+        }),
         phoneNumber: zod_1.z.string({
             required_error: "phoneNumber is required"
         }),
         dateOfDonation: zod_1.z.string({
             required_error: "dateOfDonation is required"
+        }),
+        timeOfDonation: zod_1.z.string({
+            required_error: "email is required"
         }),
         hospitalName: zod_1.z.string({
             required_error: "hospitalName is required"
