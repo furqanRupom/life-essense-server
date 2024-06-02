@@ -35,6 +35,8 @@ router.put('/donation-request/:requestId',(req,res,next) => {
 
 router.get('/my-profile',userController.getMyProfile);
 router.put('/my-profile', userController.updateMyProfile);
+router.put('/update-social-profile',userController.updateSocialMediaMethods);
+router.patch('/change-password',userController.changePassword)
 
 
 

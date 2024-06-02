@@ -50,7 +50,33 @@ const updateMyProfile = catchAsync(async (req: Request, res: Response) => {
         message: "User profile updated successfully",
         data: result
     })
+});
+
+const updateSocialMediaMethods = catchAsync(async (req: Request, res: Response) => {
+    const token = req.headers.authorization;
+    const result = await userServices.updateSocialProfile(token as string, req.body);
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.OK,
+        message: "Update Social Profile successfully",
+        data: result
+    })
 })
+
+const changePassword = catchAsync(async (req: Request, res: Response) => {
+    const token = req.headers.authorization;
+    const result = await userServices.changePassword(token as string, req.body);
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.OK,
+        message: "Change password successfully",
+        data: result
+    })
+})
+
+
+
+
 
 
 
@@ -58,6 +84,8 @@ export const userController = {
     createUser,
     userLogin,
     getMyProfile,
-    updateMyProfile
+    updateMyProfile,
+    updateSocialMediaMethods,
+    changePassword
   
 }
