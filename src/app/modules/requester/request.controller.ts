@@ -81,7 +81,8 @@ const updateRequestStatus = catchAsync(async (req: Request, res: Response) => {
 
 const getSpecificDonors = catchAsync(async(req:Request,res:Response) => {
      const id = req.params.id;
-     const result =  await requestServices.getSpecificDonorDetails(id);
+     const token = req?.headers?.authorization;
+     const result =  await requestServices.getSpecificDonorDetails(id,token as string);
 
      sendResponse(res,{
         success:true,

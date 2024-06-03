@@ -22,7 +22,10 @@ enum BloodDonate {
   Yes
   no
 }
-
+enum Status {
+  ACTIVATE
+  DEACTIVATE
+}
 // User model
 
 model SocialMediaMethods {
@@ -46,6 +49,7 @@ model User {
   phoneNumber          String?
   emergencyPhoneNumber String?
   location             String
+  status               Status?             @default(ACTIVATE)
   bloodDonate          BloodDonate?        @default(no)
   availability         Boolean             @default(false)
   createdAt            DateTime            @default(now())

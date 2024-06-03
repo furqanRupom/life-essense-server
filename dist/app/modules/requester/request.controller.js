@@ -74,8 +74,10 @@ const updateRequestStatus = (0, catchAync_1.default)((req, res) => __awaiter(voi
     });
 }));
 const getSpecificDonors = (0, catchAync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     const id = req.params.id;
-    const result = yield request_service_1.requestServices.getSpecificDonorDetails(id);
+    const token = (_a = req === null || req === void 0 ? void 0 : req.headers) === null || _a === void 0 ? void 0 : _a.authorization;
+    const result = yield request_service_1.requestServices.getSpecificDonorDetails(id, token);
     (0, sendResponse_1.default)(res, {
         success: true,
         statusCode: 200,

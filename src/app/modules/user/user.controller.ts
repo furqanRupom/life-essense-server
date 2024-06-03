@@ -75,6 +75,29 @@ const changePassword = catchAsync(async (req: Request, res: Response) => {
 })
 
 
+const allUsers = catchAsync(async (req: Request, res: Response) => {
+    const result = await userServices.getAllUsers();
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.OK,
+        message: "Fetched all users successfully",
+        data: result
+    })
+})
+
+
+const userManagement = catchAsync(async (req: Request, res: Response) => {
+    const id = req.params.id
+    const result = await userServices.userManagement(id,req.body)
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.OK,
+        message: "user update successfully",
+        data: result
+    })
+})
+
+
 
 
 
@@ -86,6 +109,8 @@ export const userController = {
     getMyProfile,
     updateMyProfile,
     updateSocialMediaMethods,
-    changePassword
+    changePassword,
+    allUsers,
+    userManagement
   
 }

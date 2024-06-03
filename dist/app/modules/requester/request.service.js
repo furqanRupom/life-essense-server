@@ -86,6 +86,7 @@ const retrieveAllDonors = (params, options) => __awaiter(void 0, void 0, void 0,
             email: true,
             location: true,
             bloodType: true,
+            image: true,
             availability: true,
             createdAt: true,
             updatedAt: true,
@@ -297,15 +298,34 @@ const updateRequestStatus = (payload, token, requestId) => __awaiter(void 0, voi
     });
     return updateStatus;
 });
-const getSpecificDonorDetails = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield prisma_1.default.user.findFirst({
-        where: {
-            id
-        },
-        include: {
-            doner: true
-        }
-    });
+const getSpecificDonorDetails = (id, token) => __awaiter(void 0, void 0, void 0, function* () {
+    const validtoken = jwtHelpers_1.jwtHelpers.verifyToken(token, config_1.config.secret_access_token);
+    let result;
+    if (validtoken) {
+        result = yield prisma_1.default.user.findFirst({
+            where: {
+                id
+            },
+            include: {
+                doner: {
+                    where: {
+                        email: validtoken === null || validtoken === void 0 ? void 0 : validtoken.email
+                    }
+                },
+                socialMediaMethods: true
+            }
+        });
+    }
+    else {
+        result = yield prisma_1.default.user.findFirst({
+            where: {
+                id
+            },
+            include: {
+                doner: true
+            }
+        });
+    }
     if (!result) {
         throw new AppError_1.default(http_status_1.default.NOT_FOUND, "Donors not found");
     }

@@ -1,6 +1,6 @@
 
 
-import { RequestStatus, SocialMediaMethods, User, UserProfile } from "@prisma/client";
+import { RequestStatus, Role, SocialMediaMethods, Status, User, UserProfile } from "@prisma/client";
 import prisma from "../../shared/prisma";
 import bcrypt from "bcrypt"
 import { UserData } from "./user.interface";
@@ -52,7 +52,8 @@ const createUserIntoDB = async (payload: UserData) => {
 const login = async (payload: { email: string, password: string }) => {
   const userData = await prisma.user.findUniqueOrThrow({
     where: {
-      email: payload.email
+      email: payload.email,
+      status:Status.ACTIVATE
     }
   })
   const isMatch = await bcrypt.compare(payload.password, userData.password);
@@ -95,6 +96,7 @@ const getMyProfile = async (token: string) => {
       location: true,
       bloodType: true,
       phoneNumber: true,
+      image:true,
       emergencyPhoneNumber: true,
       availability: true,
       createdAt: true,
@@ -133,7 +135,11 @@ const updateProfile = async (token: string, payload: Partial<UserProfile & User>
   }
 
 
+
+
   if (payload.age || payload.lastDonationDate) {
+
+    
     await prisma.userProfile.update({
       where: {
         id: getMyProfile?.profile?.id
@@ -246,6 +252,48 @@ const changePassword = async (token:string,payload:{oldPassword:string,newPasswo
 
   return updatePassword;
 }
+const getAllUsers = async () => {
+  const result  =  await prisma.user.findMany({
+    include:{
+      socialMediaMethods:true,
+      profile:true
+    },
+    orderBy:{
+       createdAt:'desc'
+    }
+  })
+  return result;
+}
+
+
+
+const userManagement = async (id:string,payload:any) => {
+ 
+
+  if(payload.role){
+    await prisma.user.update({
+      where:{
+       id,
+      },
+      data:{
+        role:payload.role
+      }
+    })
+  }
+
+  if(payload.status){
+    await prisma.user.update({
+      where:{
+        id
+      },
+      data:{
+        status:payload.status
+      }
+    })
+  }
+
+  return null;
+}
 
 
 export const userServices = {
@@ -254,5 +302,7 @@ export const userServices = {
   getMyProfile,
   updateProfile,
   updateSocialProfile,
-  changePassword
+  changePassword,
+  getAllUsers,
+  userManagement
 }

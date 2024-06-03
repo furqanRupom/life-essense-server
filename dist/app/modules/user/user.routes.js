@@ -10,6 +10,7 @@ const validateRequest_1 = __importDefault(require("../../middleware/validateRequ
 const user_validation_1 = require("./user.validation");
 const request_controller_1 = require("../requester/request.controller");
 const request_validation_1 = require("../requester/request.validation");
+const meta_controller_1 = require("../meta/meta.controller");
 const router = express_1.default.Router();
 router.post('/register', (req, res, next) => {
     next();
@@ -29,4 +30,9 @@ router.put('/donation-request/:requestId', (req, res, next) => {
 }, request_controller_1.requestController.updateRequestStatus);
 router.get('/my-profile', user_controller_1.userController.getMyProfile);
 router.put('/my-profile', user_controller_1.userController.updateMyProfile);
+router.put('/update-social-profile', user_controller_1.userController.updateSocialMediaMethods);
+router.patch('/change-password', user_controller_1.userController.changePassword);
+router.get('/users', user_controller_1.userController.allUsers);
+router.patch('/user/:id', user_controller_1.userController.userManagement);
+router.get('/admin/meta', meta_controller_1.metaController.getAdminMetaData);
 exports.userRoutes = router;

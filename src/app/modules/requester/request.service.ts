@@ -78,6 +78,7 @@ const retrieveAllDonors = async (params: any, options: IPaginationOptions) => {
             email: true,
             location: true,
             bloodType: true,
+            image:true,
             availability: true,
             createdAt: true,
             updatedAt: true,
@@ -343,15 +344,35 @@ const updateRequestStatus = async (payload: RequestStatus, token: string, reques
 
 
 
-const getSpecificDonorDetails = async (id: string) => {
-    const result = await prisma.user.findFirst({
-        where: {
-            id
-        },
-        include: {
-            doner: true
-        }
-    });
+const getSpecificDonorDetails = async (id: string,token:Partial<string>) => {
+    const validtoken = jwtHelpers.verifyToken(token, config.secret_access_token as string);
+   let result ;
+   if(validtoken){
+        result = await prisma.user.findFirst({
+           where: {
+               id
+           },
+           include: {
+               doner: {
+                   where: {
+                       email: validtoken?.email
+                   }
+               },
+               socialMediaMethods:true
+           }
+       });
+   }else{
+       result = await prisma.user.findFirst({
+           where: {
+               id
+           },
+           include: {
+               doner: true
+           }
+       });
+   }
+
+   
 
     if (!result) {
         throw new AppError(httpStatus.NOT_FOUND, "Donors not found")
