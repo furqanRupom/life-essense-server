@@ -4,10 +4,10 @@ This is the backend repository for the Blood Donation App. The application facil
 
 ## Technologies Used
 
-- Express.js: Node.js web application framework
-- Prisma: ORM (Object-Relational Mapping) for TypeScript and JavaScript
-- PostgreSQL: Relational database management system
-- TypeScript: Typed superset of JavaScript
+- **Express.js**: Node.js web application framework
+- **Prisma**: ORM (Object-Relational Mapping) for TypeScript and JavaScript
+- **PostgreSQL**: Relational database management system
+- **TypeScript**: Typed superset of JavaScript
 
 ## Installation
 
@@ -48,10 +48,10 @@ This is the backend repository for the Blood Donation App. The application facil
 
 ## Features
 
-- User authentication: Register and log in securely.
-- Blood donation requests: Users can create and respond to blood donation requests.
-- Secure endpoints: Endpoints are protected to ensure data privacy and security.
-- RESTful API: Follows REST architectural principles for predictable URLs and resource-based interactions.
+- **User Authentication**: Register and log in securely.
+- **Blood Donation Requests**: Users can create and respond to blood donation requests.
+- **Secure Endpoints**: Endpoints are protected to ensure data privacy and security.
+- **RESTful API**: Follows REST architectural principles for predictable URLs and resource-based interactions.
 
 ## API Documentation
 
@@ -69,6 +69,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 For inquiries and support, please contact the project maintainers:
 
-- Email: [furqanrupom978@gmail.com]
-- Twitter: [@ahmad288140]
-
+- Email: [furqanrupom978@gmail.com](mailto:furqanrupom978@gmail.com)
+- Twitter: [@ahmad288140](https://twitter.com/ahmad288140)
